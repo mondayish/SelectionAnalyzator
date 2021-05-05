@@ -22,7 +22,7 @@ public class Runner {
             SelectionCharacteristics characteristics = CharacteristicsCalculator.calculate(selection);
             new ConsoleWriter().writeCalculationResults(characteristics);
 
-            PolygonChart polygonChart = new PolygonChart("Полигон частот", Dataset.createPolygonDataset(selection));
+            PolygonChart polygonChart = new PolygonChart("Полигон частот", Dataset.createPolygonDataset(selection, characteristics));
             polygonChart.pack();
             polygonChart.setVisible(true);
 
