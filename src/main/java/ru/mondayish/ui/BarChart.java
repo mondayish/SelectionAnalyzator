@@ -22,7 +22,7 @@ public class BarChart extends ApplicationFrame {
 
     private JFreeChart createChart(IntervalXYDataset dataset) {
         JFreeChart chart = ChartFactory.createXYBarChart("Гистограмма частот", "X",
-                false, "P", dataset);
+                false, "Плотность частоты (P/h)", dataset);
 
         chart.setBackgroundPaint(Color.white);
         XYPlot plot = chart.getXYPlot();

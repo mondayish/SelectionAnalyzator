@@ -14,50 +14,49 @@ import java.util.stream.Collectors;
 
 public class Dataset {
 
-    private static final int INTERVAL_NUMBER = 5;
-
     public static XYDataset createPolygonDataset(Selection selection, SelectionCharacteristics characteristics) {
-        double h = round(characteristics.getRange() / INTERVAL_NUMBER);
+        double h = round(characteristics.getRange() / getIntervalNumber(selection.getElements().size()));
 
         XYSeries series = new XYSeries("Bar");
         double start = characteristics.getMin(), finish = round(start + h);
         int count = 0;
         for (Double x : characteristics.getVariationRange()) {
             if (x > finish) {
-                series.add(start + h / 2, count);
+                series.add(round(start + h/2), count);
                 count = 0;
                 start = finish;
-                finish = series.getItemCount() == INTERVAL_NUMBER - 1 ? characteristics.getMax() : round(start + h);
+                finish = series.getItemCount() == getIntervalNumber(selection.getElements().size()) - 1 ? characteristics.getMax() : round(start + h);
             }
             count++;
         }
-        series.add(start + h / 2, count);
+        series.add(round(start + h / 2), count);
 
         return new XYSeriesCollection(series);
+
     }
 
     public static IntervalXYDataset createBarDataset(Selection selection, SelectionCharacteristics characteristics) {
-        double h = round(characteristics.getRange() / INTERVAL_NUMBER);
+        double h = round(characteristics.getRange() / getIntervalNumber(selection.getElements().size()));
 
         XYSeries series = new XYSeries("Bar");
         double start = characteristics.getMin(), finish = round(start + h);
         int count = 0;
         for (Double x : characteristics.getVariationRange()) {
             if (x > finish) {
-                series.add(start + h / 2, ((double) count) / selection.getElements().size() / INTERVAL_NUMBER);
+                series.add(start + h / 2, ((double) count) / selection.getElements().size() / getIntervalNumber(selection.getElements().size()));
                 count = 0;
                 start = finish;
-                finish = series.getItemCount() == INTERVAL_NUMBER - 1 ? characteristics.getMax() : round(start + h);
+                finish = series.getItemCount() == getIntervalNumber(selection.getElements().size()) - 1 ? characteristics.getMax() : round(start + h);
             }
             count++;
         }
-        series.add(start + h / 2, ((double) count) / selection.getElements().size() / INTERVAL_NUMBER);
+        series.add(start + h / 2, ((double) count) / selection.getElements().size() / getIntervalNumber(selection.getElements().size()));
 
         return new XYSeriesCollection(series);
     }
 
     public static XYDataset createDistributionFunctionDataset(Selection selection, SelectionCharacteristics characteristics) {
-        double h = round(characteristics.getRange() / INTERVAL_NUMBER);
+        double h = round(characteristics.getRange() / getIntervalNumber(selection.getElements().size()));
 
         Map<Double, Integer> counts = new HashMap<>();
         double start = characteristics.getMin(), finish = round(start + h);
@@ -68,7 +67,7 @@ public class Dataset {
                 counts.put(finish, count);
                 count = 0;
                 start = finish;
-                finish = counts.size() == INTERVAL_NUMBER ? characteristics.getMax() : round(start + h);
+                finish = counts.size() == getIntervalNumber(selection.getElements().size()) ? characteristics.getMax() : round(start + h);
             }
             count++;
         }
@@ -93,5 +92,9 @@ public class Dataset {
 
     private static double round(double number) {
         return Math.round(number * 100) / 100.0;
+    }
+
+    private static double getIntervalNumber(int n){
+        return Math.ceil(Math.log10(n)/Math.log10(2)) + 1;
     }
 }
